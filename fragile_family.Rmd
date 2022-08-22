@@ -1,0 +1,623 @@
+---
+title: "Early social and structural determinants of adolescent wellbeing"
+author:
+- Hexiang Liu
+- Yuxuan Zhang
+- Stacey Bevan
+- Yaoyu Wang
+date: '05/01, 2022'
+output:
+  pdf_document:
+    toc: yes
+    toc_depth: '4'
+  html_document:
+    code_folding: show
+    highlight: haddock
+    theme: lumen
+    toc: yes
+    toc_depth: 4
+    toc_float: yes
+  word_document:
+    toc: yes
+    toc_depth: '4'
+urlcolor: blue  
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(fig.height=3.5, fig.width=7, warning = F, echo=F)
+if (!require("pacman")) install.packages("pacman")
+pacman::p_load(rlang, tidyverse, randomForest, tree, ISLR, rpart, rattle, pROC, partykit, ggplot2, glmnet, leaps, dplyr, keras, neuralnet, imager, ranger,haven,labelled,mice,car,gridExtra)
+```
+
+# Executive Summary
+
+## Background
+
+In late 2021 the US Surgeon General’s Advisory released a public health statement about the alarming assaults on youth wellbeing. Even before the COVID pandemic, 20% of US youth reported a mental health disorder, and only half received appropriate treatment. In the last two years, emergency room visits for psychiatric crises have doubled and youth have reduced access to friends, teachers and healthcare providers that can recognize early signs of mental health challenges. This report called for coordinated action for community support of adolescents, including increased attention in schools and healthcare systems. There is a need to identify mechanisms that underpin mental health symptoms. This is especially true for adolescents who disproportionally experience social conditions that predispose them to poor outcomes, like poverty, food insecurity and local environmental factors.(1) While child mental health infrastructure has long been under resourced, there is a renewed urgency to understand how to prevent poor outcomes and promote resilience among at risk youth. 
+
+The global burden of childhood mental health symptoms is significant, non-communicable diseases are now the leading cause of disability.(2) This longstanding public health problem has developed a large body of research linking early childhood exposures to longitudinal health outcomes. Specifically, adverse childhood experiences were identified in a landmark study as associated with almost every adult disease. These include neighborhood violence, food insecurity, interpersonal trauma, and other assaults to development.(3) This study, and research that followed, had significant impact for healthcare systems that had not traditionally considered social structures as exposures for health outcomes. This work also unveiled the devastating cumulative impact of experiences that render children vulnerable to poor outcomes later in life.(4) Of particular interest is the prenatal environment, which is a sensitive period for neurodevelopment that impacts both child and maternal health.(5) These exposures are more prevalent, pervasive, and compounded by systemic racism for Black and Hispanic children, which can lead to longstanding sequela for these populations.(6) Investments in child wellbeing are a health equity issue. 
+
+## Gaps and Study Aims
+
+Where there is a robust body of work about early predictors of adolescent outcomes, there are several gaps in this understanding. Firstly, although early child exposures are well described, less is known about the impact of social conditions prenatally or at time of birth. Secondly, many samples inadvertently overrepresent families with majority identities. This preferentially develops an evidence base that is not sensitive to needs of families who are disadvantaged across stratifications of race and class, among others. Third, most prior research relies on the report of one individual to measure social constructs at the family level. Especially as it concerns child development, mothers are most likely to provide this information and the paternal role is not as well described. Lastly, adolescent wellbeing is often assessed by constructs that are proximate to the individual, like peer relationships and health behaviors. Models that include early social development are not frequently combined with structural determinants that may act as unmeasured confounders. 
+
+This study will fill these gaps using a unique application of a longitudinal dataset through the following aims: 
+1) develop a model of adolescent well-being from early social and structural health determinants and 
+2) determine which informant report is most predictive in this model.*
+
+## Data
+
+To answer these questions, we use data from the Fragile Family and Child Wellbeing Study, which is a collaboration between Princeton and Columbia Universities. This study uses a stratified, multistage design of nearly 5,000 children born in US cities between 1998 and 2000. Sixteen cities were randomly selected of urban areas with populations over 200,000 and weighted to create a nationally representative panel. The study oversampled single parent households, racial-ethnic minority families and low-income caregivers at time of birth and is well positioned to investigate the mechanisms that contribute to disparities in child outcomes. Follow-up interviews were conducted at ages 1,3,5,9 and 15 and data collection is ongoing. Although there is some attrition, over 70% of families completed surveys at 15 years of age. Included in this panel was self-report from adolescents in addition to primary caregiver participation across many constructs, including health and wellbeing. 
+
+The original study sought to understand the nature of unmarried parents, longitudinal outcomes of children and how policies and environmental conditions impact young families. Each wave collected data on attitudes and expectations, childcare, behavioral development, demographics, education, employment, family ties, finances, health, housing, criminal legal systems, parenting, and romantic relationships. For this study, we use the unweighted sample for ease of analysis with the unrestricted data. Adolescent wellbeing is the self-reported outcome variable, constructed through 12 questions and adapted to a 100-point scale. Predictor variables were extracted from those related to social determinants of health and multiformat report of child social skills at birth and preschool age. We preferentially chose variables that are sensitive to evidence based social or health interventions, like neighborhood safety and food insecurity, and questions answered by two caregivers. 
+
+## Methods 
+
+We tested a variety of models to understand the relationship between early life factors and adolescent wellbeing. Model 1 includes linear regression, linear regression with LASSO regularization, relaxed LASSO in linear regression. We then used a 0-1 classification in Model 2 to test logistic regression with LASSO and relaxed LASSO in logistic regression. Model 3 tests a random forest model with the addition of PCA transformed data. Model 4 tests a LASSO logistic model with PCA scores. Finally, we used bagging to build an ensemble model and chose Model 3 with a representative tree with 5 nodes for interpretation.    
+
+## Findings
+
+In the last model, the first node asks if the child co-sleeps with their parents at age 5. While this is perhaps not the most intuitive result, co-sleeping is common in many cultures although a less accepted practice in the US. In this context, co-sleeping may be associated with anxiety if the child is not able to separate from their parents at bedtime. Notably, there is only one prosocial behavior at age 5 in the tree: peer engagement as reported by caregivers. This is surprising given the literature on early child development. The only other variable related to behavior is having a consistent bedtime routine, which is highly related to co-sleeping. Most of the remainder of the variables are related to social conditions, and therefore preventable with appropriate interventions. 
+
+There are two environmental exposures negativly predictive of adolesent wellbeing- household smoking and prenatal alcohol consumption. Community saftey, cohesion (willingness of neighbors to help each other) and avaliability of social services like food stamps are also important contributors of wellbeing. Finally, father's self report of life satisfaction and investment in their child's life are important predictive factors. There are a couple of factors that have a neuanced interpretation. For example, not having a computer in the home is associated with wellbeing. We may expect that family access to technology would facilitate accessing resources that promote healthy development. That said, excessive exposure to screens is well understood to stiffen brain maturation in early life. 
+
+## Implications
+
+Age zero to five is an important period in child development, interventions administered in this timeframe are likely to have enduring benefits. Of the public health programs that have focused on supporting young families with social vulnerabilities, many pay dividends on initial investments.(7) Insight into early life predictors of adolescent well-being can advise policy aimed at reducing disease burden longitudinally. There is a particular need to study the implementation of this evidence base in healthcare, educational and community-based settings. Preventative measures are a priority, however understanding longitudinal outcomes may also be helpful for point-in-time interventions. For example, understanding early risk factors could lead to increased allocation of resources to support resilience in adolescents. This is critical during the present youth mental health crisis and in efforts to prevent long term effects on adolescent wellbeing during the pandemic. In short, understanding longitudinal predictors of adolescent wellbeing has direct implications for reducing onset of mental health problems and screening to identify risk factors for early intervention across community settings.  
+
+## References
+
+1.	Roos LL, Wall-Wieler E, Lee JB. Poverty and Early Childhood Outcomes. Pediatrics. 2019;143(6):e20183426.
+2.	Polanczyk GV. The burden of childhood mental disorders. European Child & Adolescent Psychiatry. 2013;22(3):135-7.
+3.	Benarous X, Raffin M, Bodeau N, Dhossche D, Cohen D, Consoli A. Adverse childhood experiences among inpatient youths with severe and early-onset psychiatric disorders: Prevalence and clinical correlates. Child Psychiatry and Human Development. 2017;48(2):248-59.
+4.	Sarkar T, Patro N, Patro IK. Cumulative multiple early life hits- a potent threat leading to neurological disorders. Brain Res Bull. 2019;147:58-68.
+5.	Dean RS, Davis AS. Relative risk of perinatal complications in common childhood disorders. School Psychology Quarterly. 2007;22(1):13-25.
+6.	Bernard DL, Smith Q, Lanier P. Racial discrimination and other adverse childhood experiences as risk factors for internalizing mental health concerns among Black youth. Journal of traumatic stress. 2021.
+7.	Dawson G, Ashman SB, Carver LJ. The role of early experience in shaping behavioral and brain development and its implications for social policy. Dev Psychopathol. 2000;12(4):695-712.
+
+# Detailed Analysis
+
+## 1 Data Preparation and Exploratory Data Analysis
+
+### Data Prep
+
+We start our analysis from the cleaned data (see Appendix 1 for data preparation from original data). We merge the features and labels and remove person id to get the data frame.
+
+```{r, EDA start,include=FALSE}
+# Read data
+setwd("~/Documents/homework/STAT571/fragile_family")
+y_data<-read.csv('final_y_100.csv')
+x_data<-read.csv('x_variables.csv')
+# Change data type
+x_data$idnum<-as.character(x_data$idnum)
+x_data$p4b23<-as.numeric(x_data$p4b23)
+# Merge features and labels by id
+cleaned_data<-merge(x_data,y_data,on='idnum')
+data.fl<-select(cleaned_data,-c(1))
+#str(cleaned_data)
+dim(data.fl)
+summary(data.fl)
+```
+
+There are 3,407 records with 53 features and 1 label (wellbeing). Each column stands for one question in the survey and the answers are integers representing their answers. The description for each question is in the appendix. 
+
+### Distribution of Wellbeing
+
+In our study, we want to predict children's wellbeing, so we first take a look at the distribution of their self-reported wellbeing scores
+
+```{r}
+# data.fl%>%ggplot(aes(x=wellbeing))+geom_histogram(bins=25,colour = 1, fill = "white")
+data.fl%>%ggplot(aes(x=wellbeing))+
+  geom_histogram(aes(y=..density..),bins=25,colour = "white", fill = "darkseagreen3")+
+  geom_density(lwd = 0.5,
+               linetype = 2,
+               colour = "gray50")+theme_classic()+
+  labs(title="Distribution of Adolescent Wellbeing", x="Scaled Wellbeing Scores", y="Density")
+```
+
+The histogram is little skewed to the left. Most people have scores above 50 and the mean wellbeing is around 70, indicating that in general adolescents in the sample rate their wellness highly.
+
+### Distribution of some features
+
+Let's also pick a few features and check their distribution:
+
+```{r}
+p1<-data.fl%>%select(p4l11,m2h8e,m4i0p)%>%
+  ggplot(aes(x=p4l11,fill=factor(p4l11)))+
+  labs(title="Child is sympathetic toward other children\'s distress\n 0-Not true, 1-Sometimes true, 2-Very true ", x="Scaled Wellbeing Scores", y="Count")+
+  geom_bar(show.legend=F, fill=c("darkseagreen2", "darkseagreen3", "darkseagreen4"))+
+  theme(text = element_text(size = 6))
+
+p2<-data.fl%>%select(p4l11,m2h8e,m4i0p)%>%
+  ggplot(aes(x=m2h8e,fill=factor(m2h8e)))+
+  geom_bar(fill=c("darkseagreen3", "darkseagreen4"))+
+labs(title="Since child\'s birth, have you received help from-WIC Program?\n 1-Yes, 2-No", x="Service Access", y="Count")+
+  theme(text = element_text(size = 6))
+
+p3<-data.fl%>%select(p4l11,m2h8e,m4i0p)%>%
+  ggplot(aes(x=m4i0p,fill=factor(m4i0p)))+
+  labs(title="Participation in any community groups\n 1-Yes, 2-No", x="Participation", y="Count")+
+  geom_bar(fill=c("darkseagreen3", "darkseagreen4"))+
+  theme(text = element_text(size = 6))
+
+grid.arrange(p1,p2,p3, ncol=2, nrow =2)
+```
+
+As is shown in the above plots, most children are sympathetic toward others' distress. More than half have received help from WIC, which is predictive of access to other government sponsored resources. More than half of the families participated in community social environments. These results confirm that the majority of our participants have good childhood wellbeing. However, there are also a considerable part of people who report negative scores on early life conditions associated with child development. This distribution provides variability in key predictors in the following models. 
+
+## 2 Model Fitting
+
+Next, we  fit the data to several models. Our aims are to predict childhood wellbeing based on the answers of the above mentioned questions and assess multiple informant report of similar constructs. 
+
+### Train/Test/Validation split
+
+We first split the data frame for training, testing and validation of the models. The testing error is used to measure the performance of each model. The model with the least testing error will be further tested on the validation data.
+
+```{r, data split,echo=FALSE}
+set.seed(1) 
+# 2800 train, 307 testing, 300 validation
+N <- 3407
+idx_train <- sample(N, 2800)
+idx_no_train <- (which(! seq(1:N) %in% idx_train))
+idx_test <- sample( idx_no_train, 307)
+idx_val <- which(! idx_no_train %in% idx_test)
+
+data.train <- data.fl[idx_train,]
+data.test <- data.fl[idx_test,]
+data.val <- data.fl[idx_val,]
+```
+
+### Model 1: Linear Regressions
+
+We start our exploration from fitting all the variables to a linear regression model.
+
+```{r, include=FALSE}
+# linear regression
+fit.lm.all<-lm(wellbeing~.,data.train)
+summary(fit.lm.all)
+Anova(fit.lm.all)
+```
+
+Apparently the linear model with all variables doesn't work well. The R-square is only 0.037, and most features are insignificant in 0.1 level.Non-linear relationship between those questions and wellbeing can be the main cause. We still conducted a backward model selection with Cp to see whether there are some interesting significant variables.
+
+```{r, model selection}
+fit.exh <- regsubsets(wellbeing~.,data.train , nvmax=25, method="backward")
+f.e <- summary(fit.exh)
+plot(f.e$cp, xlab="Number of predictors", 
+     ylab="Cp", col="red", pch=16,
+     main="Cp value vs. Num of predictors in Linear Model")
+```
+
+Here, 17 variables give the lowest Cp.
+
+```{r,echo=FALSE}
+fit.exh.var <- f.e$which
+colnames(fit.exh.var)[fit.exh.var[17,]] 
+```
+
+The final linear model will use these 17 variables
+
+```{r}
+fit.lm.final <- lm(wellbeing ~ k5e2a+f1e3+m1a13+m1f5+m1b18+m2d3a+m2h8e+m2h19b+p4b15+p4l11+p4l19+p4l43+m4i0g+m4h4+m4i0p+f4i8a1+f4a2, data.train)   
+summary(fit.lm.final)
+predict.lm <- predict(fit.lm.final, subset(data.test, select = -c(wellbeing))) 
+test.err.lm = mean((data.test$wellbeing-predict.lm)^2)
+test.err.lm
+```
+
+There's little improvement. With 17 selected variables based on Cp value, the resulting linear model have a R-square of only 0.04 and the MSE on testing dataset is 291.6771.
+
+We then tried LASSO regularization on linear regression. The result has a MSE is 299.2521 and is not a good fit. 
+
+```{r,echo=FALSE}
+#lasso for linear
+Y <- data.train[, 54] # extract Y
+X.fl <- model.matrix(wellbeing~., data=data.train)[, -1] # take the first column's of 1 out
+
+#Step 2: Find x's output from LASSO with min cross-validation error
+set.seed(10)  # to control the ramdomness in K folds 
+fit.fl.cv <- cv.glmnet(X.fl, Y, alpha=1, nfolds=10, intercept = T) 
+coef.1se <- coef(fit.fl.cv, s="lambda.1se")  #s=c("lambda.1se","lambda.min") or lambda value
+plot(fit.fl.cv)
+
+#testing error
+predict.lm.lasso1 <- predict(fit.fl.cv, as.matrix(subset(data.test, select = -c(wellbeing) )),s="lambda.1se")
+test.err.lm.lasso1 = mean((data.test$wellbeing-predict.lm.lasso1)^2)
+test.err.lm.lasso1
+```
+
+A relaxed LASSO with variables from the prior model has a slightly better testing error (287.5523) but R-square is still low (0.03038)
+
+```{r,echo=FALSE}
+coef.1se <- coef.1se[which(coef.1se !=0),]   # get the non=zero coefficients
+var.1se <- rownames(as.matrix(coef.1se))[-1] # output the names  dim(as.matrix(coef.min))
+
+data.fl.sub <-  data.fl[,c("wellbeing","m2h8e", "p4l11",
+                           "p4l32", "m4h4","m4i0p","p4b9")] 
+#names(data.fl.sub)
+fit.1se.lm <- lm(wellbeing~., data=data.fl.sub)  # debiased or relaxed LASSO
+summary(fit.1se.lm) 
+plot(fit.1se.lm,1)
+plot(fit.1se.lm,2)
+
+#testing error
+predict.lm.lasso2 <- predict(fit.1se.lm, subset(data.test, select = -c(wellbeing))) 
+test.err.lm.lasso2 = mean((data.test$wellbeing-predict.lm.lasso2)^2)
+test.err.lm.lasso2
+```
+
+### Model 2: Logistic regressions
+
+Based on the results so far, we concluded that linear models are not suitable for our analysis. We decided to change the wellness varialbe to a 0-1 classification problem by defining >70+ as good wellbeing (1) and use this to fit a logistic regression model.
+
+```{r,echo=FALSE}
+#change to 0-1 labels
+data.train1<-data.frame(data.train)
+data.train1$wellbeing[data.train1$wellbeing < 70]<-0
+data.train1$wellbeing[data.train1$wellbeing >= 70] <- 1
+data.train1$wellbeing<-as.factor(data.train1$wellbeing)
+
+data.test1<-data.frame(data.test)
+data.test1$wellbeing[data.test1$wellbeing < 70]<-0
+data.test1$wellbeing[data.test1$wellbeing >= 70] <- 1
+data.test1$wellbeing<-as.factor(data.test1$wellbeing)
+
+data.val1<-data.frame(data.val)
+data.val1$wellbeing[data.val1$wellbeing < 70]<-0
+data.val1$wellbeing[data.val1$wellbeing >= 70] <- 1
+data.val1$wellbeing<-as.factor(data.val1$wellbeing)
+```
+
+```{r,include=FALSE}
+# logistic regression with all variables
+fit.all1<-glm(wellbeing~.,data.train1, family =binomial)
+summary(fit.all1)
+Anova(fit.all1)
+```
+
+Again, most of the features are not significant. Let's try logistic regression with LASSO. 
+
+```{r,echo=FALSE}
+# logistic regression with LASSO
+Y1 <- data.train1[, 54] # extract Y
+X.fl1 <- model.matrix(wellbeing~., data=data.train1)[, -1] # take the first column's of 1 out
+#Step 2: Find x's output from LASSO with min cross-validation error
+set.seed(10)  # to control the ramdomness in K folds 
+fit.fl.cv1 <- cv.glmnet(X.fl1, Y1, family="binomial",alpha=1, nfolds=10,  type.measure = "deviance") 
+coef.1se1 <- coef(fit.fl.cv1, s='lambda.1se')  #s=c("lambda.1se","lambda.min") or lambda value
+plot(fit.fl.cv1)
+
+#testing error
+predict.lr.lasso1 <- predict(fit.fl.cv1, as.matrix(subset(data.test, select = -c(wellbeing) )), type = "class", s="lambda.1se")
+test.err.lr.lasso1 = mean(data.test1$wellbeing != predict.lr.lasso1)
+test.err.lr.lasso1
+```
+
+This model gives a testing error of 0.3973941, which is not bad.
+
+Next we fit a relaxed LASSO for logistic regression model.
+
+```{r,echo=FALSE}
+# relaxed LASSO
+coef.1se1<- coef.1se1[which(coef.1se1 !=0),]   # get the non=zero coefficients
+var.1se1 <- rownames(as.matrix(coef.1se1))[-1] # output the names  dim(as.matrix(coef.1se1))
+
+data.fl.sub1 <-  data.train1[,c("wellbeing",'k5e2a','m1a7','m2g6c','m2g4c',
+                             "m2h8e", "p4l11","p4l43", "m4h4","m4i0p","p4b9",'p4b21_1')]
+
+data.fl.sub1 <-  data.train1[,c("wellbeing",var.1se1)]
+
+#names(data.fl.sub)
+fit.1se.glm <- glm(wellbeing~., data=data.fl.sub1,family=binomial)  # debiased or relaxed LASSO
+summary(fit.1se.glm)
+fit.1se.glm.pred<- ifelse(fit.1se.glm$fitted > 0.5, "1", "0")
+table(fit.1se.glm.pred,data.train1$wellbeing)
+
+# testing error
+predict.lr.lasso2 <- predict(fit.1se.glm, subset(data.test1, select = -c(wellbeing)), type = "response")
+class.lr.lasso2 <- ifelse(predict.lr.lasso2 > .5, "1", "0")
+test.err.lr.lasso2 <- mean(data.test1$wellbeing != class.lr.lasso2)
+test.err.lr.lasso2
+```
+
+The relaxed LASSO model has a higher testing error (0.4104235).
+
+### Model 3: Random forest
+
+```{r,echo=FALSE}
+# randomforest
+fit.rf <- randomForest(wellbeing~.,data.train1, mtry=5, ntree=500)
+plot(fit.rf, pch=16, type="p", main="Training Error vs. ntree")
+legend("topleft", c('OOB MSE error', 'class-0 error', 'class-1 error'), col=1:3, cex=0.8, fill=1:3)
+```
+
+An ntree > 100 can mitigate the OOB testing errors. We decide to use ntree = 300.
+
+```{r,echo=FALSE}
+#set.seed(1)
+#rf.error.p <- 1:50  # set up a vector of length 50
+#for (p in 1:50)  # repeat the following code inside { } 50 times
+#{
+#  fit.rf.1 <- randomForest(wellbeing~., data.train1, mtry=p, ntree=300)
+#  rf.error.p[p] <- fit.rf.1$err.rate[300]  # collecting oob mse based on 300 trees
+#}
+
+rf.error.p = c(0.4267857, 0.4157143, 0.4317857, 0.4210714, 0.4403571, 0.4396429, 0.4371429, 0.4400000, 0.4364286, 0.4335714, 0.4325000, 0.4378571, 0.4300000, 0.4271429, 0.4489286, 0.4367857, 0.4425000, 0.4435714, 0.4353571, 0.4421429, 0.4500000, 0.4482143, 0.4400000, 0.4482143, 0.4425000, 0.4510714, 0.4471429, 0.4375000, 0.4367857, 0.4539286, 0.4421429, 0.4364286, 0.4392857, 0.4510714, 0.4414286, 0.4453571, 0.4389286, 0.4325000, 0.4535714, 0.4500000, 0.4432143, 0.4339286, 0.4410714, 0.4521429, 0.4457143, 0.4578571, 0.4585714, 0.4442857, 0.4467857, 0.4389286)
+
+plot(1:50, rf.error.p, pch=16,
+     main = "Testing errors of mtry with 300 trees",
+     xlab="mtry",
+     ylab="OOB mse of mtry")
+lines(1:50, rf.error.p)
+```
+
+We decide to use mtry=14, so our final model will use ntree=300 and mtry=14.
+
+```{r,echo=FALSE}
+# final model
+set.seed(1)
+fit.rf.final <- randomForest(wellbeing~.,data.train1, mtry=14, ntree=300)
+
+# Testing error
+fit.rf.final.pred.y <- predict(fit.rf.final, subset(data.test1, select = -c(wellbeing)), type="response") # majority vote
+fit.rf.final.test.err <- mean(data.test1$wellbeing != fit.rf.final.pred.y)
+fit.rf.final.test.err
+```
+
+The testing error for random forest is 0.38, which is lower than previous logistic models. 
+
+We move to creating PC values with the training data. 
+
+```{r get PC values using training data,echo=FALSE}
+
+# Perform PCA analysis
+pc.train <- prcomp(data.train1[,-54], scale=TRUE) # PCA analysis & take "wellbeing" out of it
+
+# How do PCs capture the variability of the data
+pc.train.imp <- t((summary(pc.train))$importance)   # this is a matrix
+pc.train.imp <- as.data.frame(pc.train.imp) 
+names(pc.train.imp) <- c("Sdev", "PVE", "CPVE")
+attach(pc.train.imp)
+# par(mfrow=c(3,1))
+plot(PVE, xlim=c(1, 50))
+#plot(CPVE, main="Scree plot of CPVE") # It is completely increasing no breaks.
+abline(v=34, lty=2)
+detach(pc.train.imp)
+```
+
+```{r,include=FALSE}
+# Determine numbers of PCs
+pc.train.imp$CPVE 
+pc.train.imp[34,]# we can see that 34 PCs would cover more than 75% variance (76.5%) for the original data set
+```
+
+Based on the plots, we decide to use 34 PC scores to represent the original data set, since 34 PCs would capture about 76.5% of the variance. Then, we extract PC scores from these 34 PCs and predict PC scores for testing data.
+
+```{r,include=FALSE}
+# Extract PC scores
+pc.train.scores <- pc.train$x[, 1:34]  
+dim(pc.train.scores)        
+
+pc.test.scores <- predict(pc.train, data.test1[, -c(54)]) 
+pc.test.scores <- pc.test.scores[, 1:34]# get pc scores for testing data
+dim(pc.test.scores)
+```
+
+### Model 4: LASSO logistic model with PCA scores.
+
+```{r, echo=FALSE}
+# LASSO with PCs
+Y <- data.train1$wellbeing
+X <- as.matrix(pc.train.scores)
+set.seed(100)
+result.lasso.pca <- cv.glmnet(X,Y, alpha=.99, family="binomial")
+plot(result.lasso.pca)
+```
+
+```{r, echo=FALSE,warning=FALSE,message=FALSE}
+# Testing Errors
+predict.glm.pca <- predict(result.lasso.pca, pc.test.scores, s="lambda.1se", type="response")
+class.glm.pca <- rep("0",nrow(data.test1))
+class.glm.pca[predict.glm.pca > .5] = "1"
+#length(class.glm.pca)
+
+testerror.glm <- mean(data.test1$wellbeing != class.glm.pca)
+testerror.glm
+pROC::roc(data.test1$wellbeing, predict.glm.pca, plot=T)
+```
+
+LASSO with PCA scores gives a testing error of 0.3941368.
+
+### Model 5: Random Forest with PCA scores
+
+```{r,echo=FALSE}
+# New data with PCs and binomial "wellbeing"
+wb <- as.data.frame(data.train1$wellbeing)
+wb <- wb %>% rename(wellbeing="data.train1$wellbeing")
+
+data.train1.pc <- cbind(pc.train.scores, wb)
+data.train1.pc <- as.data.frame(data.train1.pc)
+```
+
+```{r, echo=FALSE}
+# randomforest
+fit.rf.pc <- randomForest(wellbeing~.,data.train1.pc, mtry=5, ntree=500)
+plot(fit.rf.pc, pch=16, type="p", main="Training Error vs. ntree")
+legend("topleft", c('OOB MSE error', 'class-0 error', 'class-1 error'), col=1:3, cex=0.8, fill=1:3)
+```
+
+An ntree > 200 can settle the OOB testing errors. We will go with ntree = 300.
+
+```{r,echo=FALSE}
+# set.seed(1)
+# rf.error.p <- 1:50  # set up a vector of length 50
+# for (p in 1:50)  # repeat the following code inside { } 50 times
+# {
+#  fit.rf.1 <- randomForest(wellbeing~., data.train1.pc, mtry=p, ntree=300)
+#  rf.error.p[p] <- fit.rf.1$err.rate[300]  # collecting oob mse based on 300 trees
+# }
+
+rf.error.p = c(0.4389286 ,0.4407143 ,0.4464286 ,0.4321429 ,0.4375000 ,0.4328571 ,0.4425000 ,0.4364286 ,0.4300000 ,0.4371429 ,0.4325000 ,0.4453571 ,0.4339286 ,0.4435714 ,0.4367857 ,0.4300000 ,0.4421429 ,0.4239286 ,0.4303571 ,0.4428571 ,0.4278571 ,0.4450000 ,0.4296429 ,0.4378571 ,0.4392857 ,0.4246429 ,0.4321429 ,0.4339286 ,0.4392857 ,0.4310714 ,0.4442857 ,0.4396429 ,0.4328571 ,0.4410714 ,0.4325000 ,0.4350000 ,0.4346429 ,0.4417857 ,0.4314286 ,0.4307143 ,0.4435714 ,0.4421429 ,0.4339286 ,0.4425000 ,0.4350000 ,0.4350000 ,0.4357143 ,0.4296429 ,0.4314286 ,0.4396429)
+
+plot(1:50, rf.error.p, pch=16,
+     main = "Testing errors of mtry with 300 trees",
+     xlab="mtry",
+     ylab="OOB mse of mtry")
+lines(1:50, rf.error.p)
+```
+
+We will use mtry=18 and our final model will use ntree=300 and mtry=18. (mtry=p/3)
+
+```{r}
+# final model
+set.seed(200)
+fit.rf.pc.final <- randomForest(wellbeing~.,data.train1, mtry=18, ntree=300)
+
+# Testing error
+fit.rf.pc.final.pred.y <- predict(fit.rf.pc.final, subset(data.test1, select = -c(wellbeing)), type="response") # majority vote
+fit.rf.pc.final.test.err <- mean(data.test1$wellbeing != fit.rf.pc.final.pred.y)
+fit.rf.pc.final.test.err
+```
+The testing error for randomForest model with PCA data is 0.44, which is higher than the LASSO logistic PCA model. 
+
+### Model 6: Baggings
+
+So far, we have 6 models: 1- Linear model (not considered); two variations of model 2: LASSO Logistic regression (testing error=0.3973941) and Relaxed LASSO Logistic regression  (testing error=0.4104235); 3- Random forest(testing error=0.3843648); 4- LASSO Logistic regression with PCA (testing error=0.3941368); 5- Random forest with PCA (testing error=0.4364821). We then build an ensemble model by taking the average of predicted probabilities from model 2, 3 and 4, and make prediction based on the averaged probability.
+
+```{r, echo=FALSE}
+#Predicting the probabilities
+predict.lasso.prob <- predict(fit.fl.cv1, as.matrix(subset(data.test1, select = -c(wellbeing) )), s="lambda.min", type = "response") # 1. LASSO fit
+pridict.rf.prob <- predict(fit.rf.final, subset(data.test1, select = -c(wellbeing)), type="prob") # 2. Random Forest
+predict.lasso.pca.prob <- predict(result.lasso.pca, pc.test.scores, s="lambda.min", type = "response") # 3. LASSO with PC scores
+
+#Taking average of predictions
+predict.avg<-(predict.lasso.prob + pridict.rf.prob[,2] + predict.lasso.pca.prob)/3
+
+#Splitting into binary classes at 0.5
+class.ensemble <- rep("0", nrow(data.test1))
+class.ensemble[predict.avg > .5] ="1"
+testerror.ensemble <- mean(data.test1$wellbeing != class.ensemble)
+testerror.ensemble
+```
+
+### Final model and validation
+
+Based on the testing error, our final model will be Model 3: Random forest.
+
+```{r, echo=FALSE}
+# Validation error
+fit.rf.final.pred.val.y <- predict(fit.rf.final, subset(data.val1, select = -c(wellbeing)), type="response") # majority vote
+fit.rf.final.val.err <- mean(data.val1$wellbeing != fit.rf.final.pred.val.y)
+fit.rf.final.val.err
+```
+
+The final validation error is 0.076, which is acceptable.
+
+```{r, echo=FALSE, warning=FALSE,message=FALSE}
+# install.packages("devtools")
+# library(devtools)
+# devtools::install_github('araastat/reprtree')
+library(reprtree)
+reprtree:::plot.reprtree( ReprTree(fit.rf.final, data.train1, metric='d2'),depth=5)
+```
+```{r, echo=FALSE, fig.cap="Tree of early predictors of Adolescent wellbeing", out.width = '100%'}
+knitr::include_graphics("greentree.jpg")
+```
+
+This plot shows the best tree using d2 metric with the depth of 5. While it is not one of the trees in the randomForest, it is easier to look at. Because the random forest produced a tree with over 50 features, we elected to limit the nodes to better visualize relationships. This tree provides an interpretable relationship between early predictors of child wellbeing.  
+
+# Appendix
+
+## Appendix 1: Data Preparation
+
+```{r}
+#fragile_families<-read_dta('FF_allwaves_2020v2.dta')
+```
+
+We first select 12 columns based on domain knowledge that are related to children's wellbeing. These items were created by study researchers from the Adaptive Social Behaviora Inventory and the Social Skills Rating System. Both are tools validated to assess adolescent social and psychological wellbeing. These scales ask questions like: I am open and direct about what I want, I make friends easily, I am self-confidenc tin social situations. For each column, a larger value stands for better self report of wellness. We sum them to create a total score for wellbeing. Finally, we multiplied this score by 4.16 to create a variable scaled to 100 for easier understanding. 
+
+```{r, no need to run this }
+# selected2<-c('idnum','k6d1a','k6d1b','k6d1c','k6d1d','k6d1e','k6d1f','k6d1g','k6d1h',
+#               'k6d1i','k6d1j','k6d1k','k6d1l')
+# twelve_cols<-fragile_families[,selected2]
+# twelve_cols1 <- twelve_cols %>% filter_at(colnames(twelve_cols), all_vars(. >= 0))#drop negative values
+# twelve_cols1$idnum<-as.character(twelve_cols1$idnum)
+# twelve_cols1[,c(2:13)]<-twelve_cols1[,c(2:13)]-1
+# twelve_cols1$wellbeing<-rowSums(twelve_cols1[,c(2:13)])
+# final_y<-twelve_cols1[,c(1,14)]
+# final_y_100<-final_y%>%mutate(wellbeing=round(4.16*wellbeing))
+```
+
+```{r}
+#write.csv(final_y,"final_y.csv", row.names = FALSE)
+#write.csv(final_y_100,"final_y_100.csv", row.names = FALSE)
+```
+
+We then selected more than 60 columns that are associated in the literature with positive child development at birth and age 5. The total number of children in survey is 4800, so we dropped all columns with >2000 NAs. This is a reasonable decision because the survey has skip patters and not all families were asked these questions. At year 15, the study had an attrition rate of less than 30% and questions were administered by in-person research staff. We are confident the data is not biased based on missingness and therefore did not conduct sensitivity analyses. 
+
+For the remainder of the variables, we used a package called "mice" to impute the values. We used method='polr' for ordinal categorical columns and method='pmm' for continuous column. We checked the percentage for each level, which was similar before and after imputing. This indicates that the imputations did not change the distribution for each level, which is a good indicator for the following analyses. 
+
+We elected not to list all study questions used as variables in this project, however key constructs include parental life satisfaction, presense of prenatal care, neighborhood saftey, and father's investment in child rearing at the time of birth. At age 5 we included variables associated with prosocial behavior (child gets along with peers, child is nervous, child emotion regulation), participation in school events, recieving social services like supplemental income, exposure to interpersonal violence and family sleep hygiene. 
+
+```{r, selected all columns we need}
+#selectedx<-c('idnum','k5e2a','f1h2','f1e3','m1e4b','m1j2b','f1g7','m1a13','m1g2','m1g3','m1g4','f1f2','m1f5','f1b18','f1c2f','f1b10','f1b23d','m1a7','m1b7b','m1b18','f2b29c','m2g6c','f2k1a','f2k6','f2k12','m2k14','m2d3a','m2g4c','m2g13','f2h8a2','f2h10','f2l9','m2b34a','m2h8e','m2h8b','m2h11','m2h19b','f2b3','f2b2','f2b12','f2b9','m2b8a','m2h19i','m2j16','f2h1a','f2h19','f2h25','f2a6a','f4b8','m4d3','m4i7b','f4b4b6','f4b29a9','f4b29a12','m4b29a18','o4v6c','p4b15','p4l3','p4l5','p4l11','p4l19','p4l22','p4l28','p4l32','p4l43','t4b1a','t4e2c','f4h1d','m4h1g','m4h1d','f4i0e','f4i0h','m4i0g','m4h4','m4i0p','f4i8a1','f4j24a','p4a22','p4b23','t4a13','f4a2','f4i0n1','o4r10','p4b9','p4b21_1','p4c8','p4h1')
+#x_table<-fragile_families[,selectedx]
+```
+
+```{r, check each column if they have more than 2000 NAs, if yes, drop those columns}
+# x_table1<-data.frame(x_table)
+# for(i in 1:ncol(x_table)) {       # for-loop over columns
+#   num_of_na<-nrow(x_table[x_table[,i]<0,])
+#   print(num_of_na)
+#   print(name_col<-names(x_table)[i])
+#   name_col<-names(x_table)[i]
+#   if ( num_of_na >2000) {
+#     x_table1<-x_table1[ , !(colnames(x_table1) %in% c(name_col))]
+#   }
+#   
+# }
+```
+
+```{r, double check remained column}
+# for(i in 1:ncol(x_table1)) {       # for-loop over columns
+#   num_of_na<-nrow(x_table1[x_table1[,i]<0,])
+#   print(num_of_na)
+#   }
+```
+
+```{r, prepare x, replace all negative values to NA}
+# x_na<-data.frame(x_table1)
+# x_na[x_na < 0] <- NA
+# x_na$idnum<-as.character(x_na$idnum)
+# x_na$p4b23<-as.numeric(x_na$p4b23)
+# x_na %<>% mutate_at(c(2:47,49:54), factor)
+```
+
+```{r, impute NA for all categorical columns}
+# x.impmi<-mice(x_na[,c(2:47,49:54)], m = 5,method='polr',maxit=5,            
+#                  diagnostics=TRUE)
+```
+
+```{r, merge the imputed back}
+# x.impmi$imp$k5e2a
+# imp_data<-mice::complete(x.impmi)
+# #write.csv(imp_data,"impute_factors.csv", row.names = FALSE)
+# str(imp_data)
+# str(x_na)
+```
+
+```{r,impute the numeric column and merge it back, x_variables finished}
+# x_na1<-data.frame(imp_data)
+# x.impmi2<-mice(x_na[,c(1,48)], m = 5,method='pmm',maxit=5,            
+#                  diagnostics=TRUE)
+# imp_data2<-mice::complete(x.impmi2)
+# imp_data2<-data.frame(imp_data2)
+# #write.csv(imp_data2,"impute_num.csv", row.names = FALSE)
+# impute_all<-cbind(imp_data2,imp_data)
+# #write.csv(impute_all,"x_variables.csv", row.names = FALSE)
+# str(impute_all)
+# summary(impute_all)
+# summary(x_na)
+```
+
+At this stage, we have two choices, leave the categorical as categorical or change it to numeric. We tried both methods and found numeric is a better choice for modeling. If needed, we can change it to numeric directly because the data frame has ordered categorical columns. This cleaned data was used in the study to model adolescent wellbeing from early life predictors. 
