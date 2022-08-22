@@ -21,3 +21,35 @@ To answer these questions, we use data from the [Fragile Family and Child Wellbe
 
 The original study sought to understand the nature of unmarried parents, longitudinal outcomes of children and how policies and environmental conditions impact young families. Each wave collected data on attitudes and expectations, childcare, behavioral development, demographics, education, employment, family ties, finances, health, housing, criminal legal systems, parenting, and romantic relationships. For this study, we use the unweighted sample for ease of analysis with the unrestricted data. Adolescent wellbeing is the selfreported outcome variable, constructed through 12 questions and adapted to a 100-point scale. Predictor variables were extracted from those related to social determinants of health and multiformat report of child social skills at birth and preschool age. We preferentially chose variables that are sensitive to evidence based social or health interventions, like neighborhood safety and food insecurity, and questions answered by two caregivers.
 
+
+## Part I: Data Preparation and Exploratory Data Analysis
+
+### Data Prep
+
+The very first stepWe first select 12 columns based on domain knowledge that are related to children’s wellbeing. These items
+were created by study researchers from the Adaptive Social Behaviora Inventory and the Social Skills Rating
+System. Both are tools validated to assess adolescent social and psychological wellbeing. These scales ask
+questions like: I am open and direct about what I want, I make friends easily, I am self-confidenc tin social
+15
+situations. For each column, a larger value stands for better self report of wellness. We sum them to create
+a total score for wellbeing. Finally, we multiplied this score by 4.16 to create a variable scaled to 100 for
+easier understanding.
+We then selected more than 60 columns that are associated in the literature with positive child development
+at birth and age 5. The total number of children in survey is 4800, so we dropped all columns with >2000
+NAs. This is a reasonable decision because the survey has skip patters and not all families were asked these
+questions. At year 15, the study had an attrition rate of less than 30% and questions were administered by
+in-person research staff. We are confident the data is not biased based on missingness and therefore did not
+conduct sensitivity analyses.
+For the remainder of the variables, we used a package called “mice” to impute the values. We used
+method=‘polr’ for ordinal categorical columns and method=‘pmm’ for continuous column. We checked the
+percentage for each level, which was similar before and after imputing. This indicates that the imputations
+did not change the distribution for each level, which is a good indicator for the following analyses.
+We elected not to list all study questions used as variables in this project, however key constructs include
+parental life satisfaction, presense of prenatal care, neighborhood saftey, and father’s investment in child
+rearing at the time of birth. At age 5 we included variables associated with prosocial behavior (child gets
+along with peers, child is nervous, child emotion regulation), participation in school events, recieving social
+services like supplemental income, exposure to interpersonal violence and family sleep hygiene.
+At this stage, we have two choices, leave the categorical as categorical or change it to numeric. We tried
+both methods and found numeric is a better choice for modeling. If needed, we can change it to numeric
+directly because the data frame has ordered categorical columns. This cleaned data was used in the study
+to model adolescent wellbeing from early life predictors.
