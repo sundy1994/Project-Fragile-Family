@@ -64,4 +64,59 @@ We start our exploration from fitting all the variables to a linear regression m
 
 ![CP](https://user-images.githubusercontent.com/92217557/185976775-cf1148b3-e9ec-4e6e-b78e-f44057e5c6da.png)
 
-With 17 selected variables based on Cp value, the resulting linear model have a R-square of only 0.04 and the MSE on testing dataset is 291.6771. We then tried LASSO regularization on linear regression. The result has a MSE is 299.2521 and is not a good fit.
+With 17 selected variables based on Cp value, the resulting linear model have a R-square of only 0.04 and the MSE on testing dataset is 291.6771. We then tried LASSO regularization on linear regression. The result has a MSE is 299.2521 and is not a good fit. A relaxed LASSO with variables from the prior model has a slightly better testing error (287.5523) but R-square is still low (0.03038).
+
+### Model 2: Logistic regressions
+
+Based on the results so far, we concluded that linear models are not suitable for our analysis. We decided to change the wellness varialbe to a 0-1 classification problem by defining >70+ as good wellbeing (1) and use this to fit a logistic regression model. Again, most of the features are not significant. So then we tried logistic regression with LASSO.
+
+![LR](https://user-images.githubusercontent.com/92217557/186028279-68fce018-939c-4f01-9d6a-70f1bf2d5281.png)
+
+
+This model gives a testing error of 0.3973941, which is not bad. Next we fit a relaxed LASSO for logistic regression model. The relaxed LASSO model has a higher testing error (0.4104235).
+
+### Model 3: Random forest
+
+To implement the Random Forest model, we need to determine the parameters first. As is shown in the plot of error vs. number of trees, ntree > 100 can mitigate the OOB testing errors. We decide to use ntree = 300.
+
+![OOB](https://user-images.githubusercontent.com/92217557/186029739-d27ed284-5076-4b9a-86e8-17ddd89825b2.png)
+
+Similarly, the number of features to consider at each split point (mtry) can also be determind by plotting OOB errors. A mtry of 14 can give relative low error, so our final model will use ntree=300 and mtry=14.
+
+![mtry](https://user-images.githubusercontent.com/92217557/186030427-53989d9c-de20-4ab3-a363-f01f5e49da2c.png)
+
+The testing error of this random forest model is 0.38, which is lower than previous logistic models.
+
+### Model 4: LASSO logistic model with PCA scores
+
+We then tried PCA on the original training data and feed the processed dataset to these models. Based on Proportion of Variance Explained (PVE), we decide to use 34 PC scores to represent the original data set, since 34 PCs would capture about 76.5% of the variance. Then, we extract PC scores from these 34 PCs and predict PC scores
+for testing data.
+
+LASSO with PCA scores gives a testing error of 0.3941368.
+
+### Model 5: Random Forest with PCA scores
+
+With the same procedure of Model 3, ntree=300 and mtry=18 can settle the OOB testing errors. The testing error for this Random Forest model with PCA data is 0.44, which is higher than the LASSO logistic PCA model.
+
+### Model 6: Baggings
+
+So far, we have 6 models: 1: Linear model (not considered); two variations of model 2: LASSO Logistic regression (testing error=0.3973941) and Relaxed LASSO Logistic regression (testing error=0.4104235); 3: Random forest(testing error=0.3843648); 4: LASSO Logistic regression with PCA (testing error=0.3941368); 5: Random forest with PCA (testing error=0.4364821). We then build an ensemble model by taking the average of predicted probabilities from model 2, 3 and 4, and make prediction based on the averaged probability. This model gives a testing error of 0.39.
+
+Therefore, our final model will be Model 3: Random forest, which has the lowest testing error. Using the validation set, the final validation error is 0.076, which is acceptable.
+
+We plotted the best tree from our final model using d2 metric with the depth of 5. The random forest model produced a tree with over 50 features, we elected to limit the nodes to better visualize relationships. This tree provides an interpretable relationship between early predictors of child wellbeing.
+
+![greentree](https://user-images.githubusercontent.com/92217557/186031534-db272773-ac51-434c-92e9-958c582d6e87.jpg)
+
+## Summary
+
+### Methods
+In this project, we tested a variety of models to understand the relationship between early life factors and adolescent wellbeing. Model 1 includes linear regression, linear regression with LASSO regularization, relaxed LASSO in linear regression. We then used a 0-1 classification in Model 2 to test logistic regression with LASSO and relaxed LASSO in logistic regression. Model 3 tests a random forest model with the addition of PCA transformed data. Model 4 tests a LASSO logistic model with PCA scores. Finally, we used bagging to build an ensemble model and chose Model 3 with a representative tree with 5 nodes for interpretation.
+
+### Findings
+In the last model, the first node asks if the child co-sleeps with their parents at age 5. While this is perhaps not the most intuitive result, co-sleeping is common in many cultures although a less accepted practice in the US. In this context, co-sleeping may be associated with anxiety if the child is not able to separate from their parents at bedtime. Notably, there is only one prosocial behavior at age 5 in the tree: peer engagement as reported by caregivers. This is surprising given the literature on early child development. The only other variable related to behavior is having a consistent bedtime routine, which is highly related to co-sleeping. Most of the remainder of the variables are related to social conditions, and therefore preventable with appropriate interventions.
+
+There are two environmental exposures negativly predictive of adolesent wellbeing- household smoking and prenatal alcohol consumption. Community saftey, cohesion (willingness of neighbors to help each other) and avaliability of social services like food stamps are also important contributors of wellbeing. Finally, father’s self report of life satisfaction and investment in their child’s life are important predictive factors. There are a couple of factors that have a neuanced interpretation. For example, not having a computer in the home is associated with wellbeing. We may expect that family access to technology would facilitate accessing resources that promote healthy development. That said, excessive exposure to screens is well understood to stiffen brain maturation in early life.
+
+### Implications
+Age zero to five is an important period in child development, interventions administered in this timeframe are likely to have enduring benefits. Of the public health programs that have focused on supporting young families with social vulnerabilities, many pay dividends on initial investments. Insight into early life predictors of adolescent well-being can advise policy aimed at reducing disease burden longitudinally. There is a particular need to study the implementation of this evidence base in healthcare, educational and communitybased settings. Preventative measures are a priority, however understanding longitudinal outcomes may also be helpful for point-in-time interventions. For example, understanding early risk factors could lead to increased allocation of resources to support resilience in adolescents. This is critical during the present youth mental health crisis and in efforts to prevent long term effects on adolescent wellbeing during the pandemic. In short, understanding longitudinal predictors of adolescent wellbeing has direct implications for reducing onset of mental health problems and screening to identify risk factors for early intervention across community settings.
