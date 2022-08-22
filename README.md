@@ -51,3 +51,17 @@ Let’s also pick a few features and check their distribution. As is shown in th
 
 
 ## Part II: Model Fitting
+
+Next, we fit the data to several models. Our aims are to predict childhood wellbeing based on the answers of the above mentioned questions and assess multiple informant report of similar constructs.
+
+### Train/Test/Validation split
+
+We first split the data frame for training, testing and validation of the models. The testing error is used to measure the performance of each model. The model with the least testing error will be further tested on the validation data.
+
+### Model 1: Linear Regressions
+
+We start our exploration from fitting all the variables to a linear regression model. Apparently the linear model with all variables doesn’t work well. The R-square is only 0.037, and most features are insignificant in 0.1 level.Non-linear relationship between those questions and wellbeing can be the main cause. We still conducted a backward model selection with Cp to see whether there are some interesting significant variables. Here, 17 variables give the lowest Cp. The final linear model will use these 17 variables.
+
+![CP](https://user-images.githubusercontent.com/92217557/185976775-cf1148b3-e9ec-4e6e-b78e-f44057e5c6da.png)
+
+With 17 selected variables based on Cp value, the resulting linear model have a R-square of only 0.04 and the MSE on testing dataset is 291.6771. We then tried LASSO regularization on linear regression. The result has a MSE is 299.2521 and is not a good fit.
